@@ -40,6 +40,7 @@ const typeModalError = document.getElementById("type-modal-error");
 const typeModalCancel = document.getElementById("type-modal-cancel");
 const typeModalSave = document.getElementById("type-modal-save");
 const successModal = document.getElementById("success-modal");
+const successModalTitle = document.getElementById("success-modal-title");
 const successModalMessage = document.getElementById("success-modal-message");
 const successModalClose = document.getElementById("success-modal-close");
 const questionsConfirmModal = document.getElementById("questions-confirm-modal");
@@ -268,7 +269,10 @@ async function saveTypeFromModal() {
   }
 }
 
-function openSuccessModal(message) {
+function openInfoModal(title, message) {
+  if (successModalTitle) {
+    successModalTitle.textContent = title;
+  }
   successModalMessage.textContent = message;
   successModal.classList.remove("hidden");
 }
@@ -641,26 +645,41 @@ function renderQuestionList(state) {
       saveButton.type = "button";
       saveButton.textContent = "Guardar respuestas";
       saveButton.addEventListener("click", async () => {
-        const nextAnswers = responseTextInputs
-          .map((input, responseIndex) => {
-            const text = input.value.trim();
-            const pointsValue = responsePointsInputs[responseIndex].value.trim();
-            if (!text) {
-              return null;
-            }
+        const parsedAnswers = responseTextInputs.map((input, responseIndex) => {
+          const text = input.value.trim();
+          const pointsValue = responsePointsInputs[responseIndex].value.trim();
+          const parsedPoints = Number(pointsValue);
 
-            const points = Number(pointsValue);
-            return {
-              text,
-              points: Number.isFinite(points) && points >= 0 ? points : 0,
-            };
-          })
-          .filter(Boolean);
+          return {
+            text,
+            pointsValue,
+            points: Number.isFinite(parsedPoints) ? parsedPoints : NaN,
+          };
+        });
 
-        if (!nextAnswers.length) {
-          summaryEl.textContent = "Debes capturar al menos una respuesta para guardar.";
+        const hasAllTexts = parsedAnswers.every((answer) => answer.text.length > 0);
+        const hasAllPoints = parsedAnswers.every((answer) => answer.pointsValue !== "" && Number.isFinite(answer.points) && answer.points >= 0);
+
+        if (!hasAllTexts || !hasAllPoints) {
+          summaryEl.textContent = "Validación: completa las 5 respuestas con sus puntos.";
+          openInfoModal(
+            "Validación requerida",
+            "Debes capturar las 5 respuestas y llenar los puntos en cada una antes de guardar."
+          );
           return;
         }
+
+        const totalPoints = parsedAnswers.reduce((sum, answer) => sum + answer.points, 0);
+        if (totalPoints !== 100) {
+          summaryEl.textContent = "Validación: la suma de puntos debe ser exactamente 100.";
+          openInfoModal(
+            "Validación requerida",
+            `La suma de puntos debe ser exactamente 100. Valor actual: ${totalPoints}.`
+          );
+          return;
+        }
+
+        const nextAnswers = parsedAnswers.map((answer) => ({ text: answer.text, points: answer.points }));
 
         try {
           await dispatch("UPSERT_QUESTION", {
@@ -674,7 +693,7 @@ function renderQuestionList(state) {
             },
           });
           summaryEl.textContent = "Respuestas guardadas correctamente.";
-          openSuccessModal("Las respuestas se guardaron correctamente en Base de Datos.");
+          openInfoModal("Guardado exitoso", "Las respuestas se guardaron correctamente en Base de Datos.");
         } catch (error) {
           summaryEl.textContent = error?.message || "No se pudieron guardar las respuestas en Base de Datos.";
         }
