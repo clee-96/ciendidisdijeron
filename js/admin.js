@@ -50,6 +50,7 @@ const adminConfirmAcceptButton = document.getElementById("admin-confirm-accept")
 
 let pendingConfirmAction = null;
 let syncingSelects = 0;
+let questionTypeOptionsSignature = "";
 const correctSound = new Audio("./assets/audio/correcto.mp3");
 const incorrectSound = new Audio("./assets/audio/incorrecto.mp3");
 const aJugarSound = new Audio("./assets/audio/a_jugar.mp3");
@@ -330,19 +331,28 @@ function renderCaptainSelect(state, team, selectEl) {
 }
 
 function renderQuestionTypeSelect(state) {
+  const questionTypes = state.questionTypes || [];
+  const nextSignature = questionTypes.map((type) => `${type.id}::${type.name}`).join("||");
   const selectedTypeId = state.ui?.activeQuestionTypeId || "";
+
   runWithSelectSync(() => {
-    gameQuestionTypeSelect.innerHTML = "";
+    if (questionTypeOptionsSignature !== nextSignature) {
+      gameQuestionTypeSelect.innerHTML = "";
 
-    (state.questionTypes || []).forEach((type) => {
-      const option = document.createElement("option");
-      option.value = type.id;
-      option.textContent = type.name;
-      gameQuestionTypeSelect.appendChild(option);
-    });
+      questionTypes.forEach((type) => {
+        const option = document.createElement("option");
+        option.value = type.id;
+        option.textContent = type.name;
+        gameQuestionTypeSelect.appendChild(option);
+      });
 
-    if (document.activeElement !== gameQuestionTypeSelect) {
-      gameQuestionTypeSelect.value = selectedTypeId;
+      questionTypeOptionsSignature = nextSignature;
+    }
+
+    const hasSelected = questionTypes.some((type) => type.id === selectedTypeId);
+    const nextValue = hasSelected ? selectedTypeId : questionTypes[0]?.id || "";
+    if (gameQuestionTypeSelect.value !== nextValue) {
+      gameQuestionTypeSelect.value = nextValue;
     }
   });
 }

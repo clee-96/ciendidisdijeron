@@ -680,7 +680,10 @@ function applyActionLocal(action, payload = {}) {
       if (state.ui.activeQuestionTypeId !== id) {
         state.ui.activeQuestionTypeId = id;
         state.round.questionIndex = -1;
-        resetRoundInternals();
+        state.round.status = "buzz-open";
+        state.round.buzzerWinner = null;
+        state.round.revealed = [];
+        state.ui.teamBackAlertTeam = null;
       }
       break;
     }
