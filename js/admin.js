@@ -168,55 +168,33 @@ function waitForSoundsAndCelebrate(state) {
   }
 
   const token = winnerVersion > 0 ? `v:${winnerVersion}` : `k:${fallbackKey}`;
-  if (pendingWinnerToken === token && winnerModalTimeoutId) {
+  if (pendingWinnerToken === token) {
     return;
   }
 
-  if (pendingWinnerToken && pendingWinnerToken !== token && winnerModalTimeoutId) {
+  if (winnerModalTimeoutId) {
     clearTimeout(winnerModalTimeoutId);
     winnerModalTimeoutId = null;
   }
 
   pendingWinnerToken = token;
 
-  const schedule = () => {
-    if (pendingWinnerToken !== token) {
-      return;
-    }
+  const latest = getState();
+  const latestWinnerFromState = latest.ui?.winnerTeam;
+  const latestWinnerFromScores = Number(latest.teams?.A?.score || 0) >= 500 ? "A" : (Number(latest.teams?.B?.score || 0) >= 500 ? "B" : null);
+  const latestWinnerTeam = latestWinnerFromState === "A" || latestWinnerFromState === "B" ? latestWinnerFromState : latestWinnerFromScores;
+  if (latestWinnerTeam !== winnerTeam) {
+    pendingWinnerToken = null;
+    return;
+  }
 
-    if (isAnyRegularSoundPlaying()) {
-      winnerModalTimeoutId = window.setTimeout(schedule, 200);
-      return;
-    }
-
-    winnerModalTimeoutId = window.setTimeout(() => {
-      if (pendingWinnerToken !== token) {
-        winnerModalTimeoutId = null;
-        return;
-      }
-
-      const latest = getState();
-      const latestWinnerFromState = latest.ui?.winnerTeam;
-      const latestWinnerFromScores = Number(latest.teams?.A?.score || 0) >= 500 ? "A" : (Number(latest.teams?.B?.score || 0) >= 500 ? "B" : null);
-      const latestWinnerTeam = latestWinnerFromState === "A" || latestWinnerFromState === "B" ? latestWinnerFromState : latestWinnerFromScores;
-      if (latestWinnerTeam !== winnerTeam) {
-        winnerModalTimeoutId = null;
-        pendingWinnerToken = null;
-        return;
-      }
-
-      openWinnerModal(latest, winnerTeam);
-      if (winnerVersion > 0) {
-        lastWinnerVersionShown = winnerVersion;
-      } else {
-        lastWinnerFallbackKeyShown = fallbackKey;
-      }
-      pendingWinnerToken = null;
-      winnerModalTimeoutId = null;
-    }, 1000);
-  };
-
-  schedule();
+  openWinnerModal(latest, winnerTeam);
+  if (winnerVersion > 0) {
+    lastWinnerVersionShown = winnerVersion;
+  } else {
+    lastWinnerFallbackKeyShown = fallbackKey;
+  }
+  pendingWinnerToken = null;
 }
 
 async function tryPlaySoundEvent(type, version) {
