@@ -49,6 +49,7 @@ const adminConfirmCancelButton = document.getElementById("admin-confirm-cancel")
 const adminConfirmAcceptButton = document.getElementById("admin-confirm-accept");
 
 let pendingConfirmAction = null;
+let syncingSelects = 0;
 const correctSound = new Audio("./assets/audio/correcto.mp3");
 const incorrectSound = new Audio("./assets/audio/incorrecto.mp3");
 const aJugarSound = new Audio("./assets/audio/a_jugar.mp3");
@@ -56,6 +57,23 @@ const triunfoSound = new Audio("./assets/audio/triunfo.mp3");
 let lastSoundEventVersion = null;
 let pendingSoundEvent = null;
 let audioUnlockConfigured = false;
+
+function runWithSelectSync(callback) {
+  syncingSelects += 1;
+  try {
+    callback();
+  } finally {
+    syncingSelects = Math.max(0, syncingSelects - 1);
+  }
+}
+
+function isUserSelectChange(event) {
+  if (syncingSelects > 0) {
+    return false;
+  }
+
+  return Boolean(event?.isTrusted);
+}
 
 function playSound(sound) {
   if (!sound) {
@@ -291,38 +309,42 @@ function renderTeamMembers(state, team, container) {
 function renderCaptainSelect(state, team, selectEl) {
   const players = (state.players || []).filter((player) => player.active && player.team === team);
   const currentCaptainId = state.round?.captains?.[team] || "";
-  selectEl.innerHTML = "";
+  runWithSelectSync(() => {
+    selectEl.innerHTML = "";
 
-  const noneOption = document.createElement("option");
-  noneOption.value = "";
-  noneOption.textContent = "No hay capitán";
-  selectEl.appendChild(noneOption);
+    const noneOption = document.createElement("option");
+    noneOption.value = "";
+    noneOption.textContent = "No hay capitán";
+    selectEl.appendChild(noneOption);
 
-  players.forEach((player) => {
-    const option = document.createElement("option");
-    option.value = player.id;
-    option.textContent = player.name;
-    selectEl.appendChild(option);
+    players.forEach((player) => {
+      const option = document.createElement("option");
+      option.value = player.id;
+      option.textContent = player.name;
+      selectEl.appendChild(option);
+    });
+
+    const validCaptain = players.some((player) => player.id === currentCaptainId);
+    selectEl.value = validCaptain ? currentCaptainId : "";
   });
-
-  const validCaptain = players.some((player) => player.id === currentCaptainId);
-  selectEl.value = validCaptain ? currentCaptainId : "";
 }
 
 function renderQuestionTypeSelect(state) {
   const selectedTypeId = state.ui?.activeQuestionTypeId || "";
-  gameQuestionTypeSelect.innerHTML = "";
+  runWithSelectSync(() => {
+    gameQuestionTypeSelect.innerHTML = "";
 
-  (state.questionTypes || []).forEach((type) => {
-    const option = document.createElement("option");
-    option.value = type.id;
-    option.textContent = type.name;
-    gameQuestionTypeSelect.appendChild(option);
+    (state.questionTypes || []).forEach((type) => {
+      const option = document.createElement("option");
+      option.value = type.id;
+      option.textContent = type.name;
+      gameQuestionTypeSelect.appendChild(option);
+    });
+
+    if (document.activeElement !== gameQuestionTypeSelect) {
+      gameQuestionTypeSelect.value = selectedTypeId;
+    }
   });
-
-  if (document.activeElement !== gameQuestionTypeSelect) {
-    gameQuestionTypeSelect.value = selectedTypeId;
-  }
 }
 
 function render(state) {
@@ -361,7 +383,9 @@ function render(state) {
   const revealedPoints = getRevealedPointsTotal(state);
   const multiplier = [1, 2, 3].includes(Number(state.round.pointsMultiplier)) ? Number(state.round.pointsMultiplier) : 1;
   if (document.activeElement !== roundMultiplierSelect) {
-    roundMultiplierSelect.value = String(multiplier);
+    runWithSelectSync(() => {
+      roundMultiplierSelect.value = String(multiplier);
+    });
   }
   awardRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0;
   stealRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0;
@@ -486,7 +510,11 @@ function attachEvents() {
 
     dispatch("ADD_SCORE", { team: targetTeam, points: points * multiplier, playTriumph: true });
   });
-  roundMultiplierSelect.addEventListener("change", () => {
+  roundMultiplierSelect.addEventListener("change", (event) => {
+    if (!isUserSelectChange(event)) {
+      return;
+    }
+
     const value = Number(roundMultiplierSelect.value);
     if (![1, 2, 3].includes(value)) {
       return;
@@ -494,7 +522,11 @@ function attachEvents() {
 
     dispatch("SET_ROUND_MULTIPLIER", { multiplier: value });
   });
-  gameQuestionTypeSelect.addEventListener("change", () => {
+  gameQuestionTypeSelect.addEventListener("change", (event) => {
+    if (!isUserSelectChange(event)) {
+      return;
+    }
+
     if (!gameQuestionTypeSelect.value) {
       return;
     }
@@ -550,8 +582,20 @@ function attachEvents() {
   teamNameInputB.addEventListener("change", () => updateTeamName("B", teamNameInputB));
   teamNameInputA.addEventListener("blur", () => updateTeamName("A", teamNameInputA));
   teamNameInputB.addEventListener("blur", () => updateTeamName("B", teamNameInputB));
-  captainSelectA.addEventListener("change", () => dispatch("SET_ROUND_CAPTAIN", { team: "A", playerId: captainSelectA.value || null }));
-  captainSelectB.addEventListener("change", () => dispatch("SET_ROUND_CAPTAIN", { team: "B", playerId: captainSelectB.value || null }));
+  captainSelectA.addEventListener("change", (event) => {
+    if (!isUserSelectChange(event)) {
+      return;
+    }
+
+    dispatch("SET_ROUND_CAPTAIN", { team: "A", playerId: captainSelectA.value || null });
+  });
+  captainSelectB.addEventListener("change", (event) => {
+    if (!isUserSelectChange(event)) {
+      return;
+    }
+
+    dispatch("SET_ROUND_CAPTAIN", { team: "B", playerId: captainSelectB.value || null });
+  });
 
   [
     [teamNameInputA, "A"],
