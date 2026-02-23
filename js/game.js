@@ -52,6 +52,7 @@ let strikeSoundDurationMs = STRIKE_OVERLAY_DEFAULT_MS;
 let lastWinnerVersionShown = 0;
 let winnerModalTimeoutId = null;
 let lastWinnerFallbackKeyShown = "";
+let pendingWinnerToken = null;
 
 function hideStrikeOverlay() {
   if (!strikeOverlayEl) {
@@ -109,27 +110,45 @@ function waitForSoundsAndCelebrate(state) {
   const fallbackKey = `${winnerTeam}:${Number(state.teams?.A?.score || 0)}:${Number(state.teams?.B?.score || 0)}`;
   const alreadyShown = winnerVersion > 0 ? winnerVersion <= lastWinnerVersionShown : fallbackKey === lastWinnerFallbackKeyShown;
   if (alreadyShown) {
+    pendingWinnerToken = null;
     return;
   }
 
-  if (winnerModalTimeoutId) {
+  const token = winnerVersion > 0 ? `v:${winnerVersion}` : `k:${fallbackKey}`;
+  if (pendingWinnerToken === token && winnerModalTimeoutId) {
+    return;
+  }
+
+  if (pendingWinnerToken && pendingWinnerToken !== token && winnerModalTimeoutId) {
     clearTimeout(winnerModalTimeoutId);
     winnerModalTimeoutId = null;
   }
 
+  pendingWinnerToken = token;
+
   const schedule = () => {
+    if (pendingWinnerToken !== token) {
+      return;
+    }
+
     if (isAnyRegularSoundPlaying()) {
       winnerModalTimeoutId = window.setTimeout(schedule, 200);
       return;
     }
 
     winnerModalTimeoutId = window.setTimeout(() => {
+      if (pendingWinnerToken !== token) {
+        winnerModalTimeoutId = null;
+        return;
+      }
+
       const latest = getState();
       const latestWinnerFromState = latest.ui?.winnerTeam;
       const latestWinnerFromScores = Number(latest.teams?.A?.score || 0) >= 500 ? "A" : (Number(latest.teams?.B?.score || 0) >= 500 ? "B" : null);
       const latestWinnerTeam = latestWinnerFromState === "A" || latestWinnerFromState === "B" ? latestWinnerFromState : latestWinnerFromScores;
       if (latestWinnerTeam !== winnerTeam) {
         winnerModalTimeoutId = null;
+        pendingWinnerToken = null;
         return;
       }
 
@@ -139,6 +158,7 @@ function waitForSoundsAndCelebrate(state) {
       } else {
         lastWinnerFallbackKeyShown = fallbackKey;
       }
+      pendingWinnerToken = null;
       winnerModalTimeoutId = null;
     }, 1000);
   };
