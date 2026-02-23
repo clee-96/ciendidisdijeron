@@ -51,6 +51,7 @@ let strikeOverlayTimeoutId = null;
 let strikeSoundDurationMs = STRIKE_OVERLAY_DEFAULT_MS;
 let lastWinnerVersionShown = 0;
 let winnerModalTimeoutId = null;
+let lastWinnerFallbackKeyShown = "";
 
 function hideStrikeOverlay() {
   if (!strikeOverlayEl) {
@@ -97,9 +98,17 @@ function openWinnerModal(state, team) {
 }
 
 function waitForSoundsAndCelebrate(state) {
+  const winnerFromState = state.ui?.winnerTeam;
+  const winnerFromScores = Number(state.teams?.A?.score || 0) >= 500 ? "A" : (Number(state.teams?.B?.score || 0) >= 500 ? "B" : null);
+  const winnerTeam = winnerFromState === "A" || winnerFromState === "B" ? winnerFromState : winnerFromScores;
+  if (winnerTeam !== "A" && winnerTeam !== "B") {
+    return;
+  }
+
   const winnerVersion = Number(state.ui?.winnerVersion) || 0;
-  const winnerTeam = state.ui?.winnerTeam;
-  if ((winnerTeam !== "A" && winnerTeam !== "B") || winnerVersion <= 0 || winnerVersion <= lastWinnerVersionShown) {
+  const fallbackKey = `${winnerTeam}:${Number(state.teams?.A?.score || 0)}:${Number(state.teams?.B?.score || 0)}`;
+  const alreadyShown = winnerVersion > 0 ? winnerVersion <= lastWinnerVersionShown : fallbackKey === lastWinnerFallbackKeyShown;
+  if (alreadyShown) {
     return;
   }
 
@@ -116,13 +125,20 @@ function waitForSoundsAndCelebrate(state) {
 
     winnerModalTimeoutId = window.setTimeout(() => {
       const latest = getState();
-      if ((Number(latest.ui?.winnerVersion) || 0) !== winnerVersion || latest.ui?.winnerTeam !== winnerTeam) {
+      const latestWinnerFromState = latest.ui?.winnerTeam;
+      const latestWinnerFromScores = Number(latest.teams?.A?.score || 0) >= 500 ? "A" : (Number(latest.teams?.B?.score || 0) >= 500 ? "B" : null);
+      const latestWinnerTeam = latestWinnerFromState === "A" || latestWinnerFromState === "B" ? latestWinnerFromState : latestWinnerFromScores;
+      if (latestWinnerTeam !== winnerTeam) {
         winnerModalTimeoutId = null;
         return;
       }
 
-      openWinnerModal(state, winnerTeam);
-      lastWinnerVersionShown = winnerVersion;
+      openWinnerModal(latest, winnerTeam);
+      if (winnerVersion > 0) {
+        lastWinnerVersionShown = winnerVersion;
+      } else {
+        lastWinnerFallbackKeyShown = fallbackKey;
+      }
       winnerModalTimeoutId = null;
     }, 1000);
   };

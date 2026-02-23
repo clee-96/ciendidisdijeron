@@ -66,6 +66,7 @@ let pendingSoundEvent = null;
 let audioUnlockConfigured = false;
 let lastWinnerVersionShown = 0;
 let winnerModalTimeoutId = null;
+let lastWinnerFallbackKeyShown = "";
 
 function runWithSelectSync(callback) {
   syncingSelects += 1;
@@ -150,9 +151,17 @@ function openWinnerModal(state, team) {
 }
 
 function waitForSoundsAndCelebrate(state) {
+  const winnerFromState = state.ui?.winnerTeam;
+  const winnerFromScores = Number(state.teams?.A?.score || 0) >= 500 ? "A" : (Number(state.teams?.B?.score || 0) >= 500 ? "B" : null);
+  const winnerTeam = winnerFromState === "A" || winnerFromState === "B" ? winnerFromState : winnerFromScores;
+  if (winnerTeam !== "A" && winnerTeam !== "B") {
+    return;
+  }
+
   const winnerVersion = Number(state.ui?.winnerVersion) || 0;
-  const winnerTeam = state.ui?.winnerTeam;
-  if ((winnerTeam !== "A" && winnerTeam !== "B") || winnerVersion <= 0 || winnerVersion <= lastWinnerVersionShown) {
+  const fallbackKey = `${winnerTeam}:${Number(state.teams?.A?.score || 0)}:${Number(state.teams?.B?.score || 0)}`;
+  const alreadyShown = winnerVersion > 0 ? winnerVersion <= lastWinnerVersionShown : fallbackKey === lastWinnerFallbackKeyShown;
+  if (alreadyShown) {
     return;
   }
 
@@ -169,13 +178,20 @@ function waitForSoundsAndCelebrate(state) {
 
     winnerModalTimeoutId = window.setTimeout(() => {
       const latest = getState();
-      if ((Number(latest.ui?.winnerVersion) || 0) !== winnerVersion || latest.ui?.winnerTeam !== winnerTeam) {
+      const latestWinnerFromState = latest.ui?.winnerTeam;
+      const latestWinnerFromScores = Number(latest.teams?.A?.score || 0) >= 500 ? "A" : (Number(latest.teams?.B?.score || 0) >= 500 ? "B" : null);
+      const latestWinnerTeam = latestWinnerFromState === "A" || latestWinnerFromState === "B" ? latestWinnerFromState : latestWinnerFromScores;
+      if (latestWinnerTeam !== winnerTeam) {
         winnerModalTimeoutId = null;
         return;
       }
 
-      openWinnerModal(state, winnerTeam);
-      lastWinnerVersionShown = winnerVersion;
+      openWinnerModal(latest, winnerTeam);
+      if (winnerVersion > 0) {
+        lastWinnerVersionShown = winnerVersion;
+      } else {
+        lastWinnerFallbackKeyShown = fallbackKey;
+      }
       winnerModalTimeoutId = null;
     }, 1000);
   };
@@ -488,9 +504,10 @@ function render(state) {
       roundMultiplierSelect.value = String(multiplier);
     });
   }
-  awardRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0;
-  stealRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0;
-  addStrikeControlButton.disabled = !(controlTeam === "A" || controlTeam === "B");
+  const actionsLocked = Boolean(state.round?.actionsLocked);
+  awardRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0 || actionsLocked;
+  stealRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0 || actionsLocked;
+  addStrikeControlButton.disabled = !(controlTeam === "A" || controlTeam === "B") || actionsLocked;
   prevQuestionButton.disabled = state.round.questionIndex <= 0;
   nextQuestionButton.disabled = state.round.questionIndex >= playableQuestions.length - 1;
 
@@ -592,8 +609,7 @@ function attachEvents() {
 
     const multiplier = [1, 2, 3].includes(Number(state.round.pointsMultiplier)) ? Number(state.round.pointsMultiplier) : 1;
 
-    await dispatch("ADD_SCORE", { team: controlTeam, points: points * multiplier, playTriumph: true });
-    await dispatch("CLEAR_ROUND_CONTROL");
+    await dispatch("ADD_SCORE", { team: controlTeam, points: points * multiplier, playTriumph: true, lockRoundActions: true });
   });
   stealRevealedPointsButton.addEventListener("click", async () => {
     const state = getState();
@@ -610,8 +626,7 @@ function attachEvents() {
 
     const multiplier = [1, 2, 3].includes(Number(state.round.pointsMultiplier)) ? Number(state.round.pointsMultiplier) : 1;
 
-    await dispatch("ADD_SCORE", { team: targetTeam, points: points * multiplier, playTriumph: true });
-    await dispatch("CLEAR_ROUND_CONTROL");
+    await dispatch("ADD_SCORE", { team: targetTeam, points: points * multiplier, playTriumph: true, lockRoundActions: true });
   });
   roundMultiplierSelect.addEventListener("change", (event) => {
     if (!isUserSelectChange(event)) {

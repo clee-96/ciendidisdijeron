@@ -156,6 +156,7 @@ function createInitialState(defaultQuestions = []) {
       buzzerWinner: null,
       revealed: [],
       pointsMultiplier: 1,
+      actionsLocked: false,
       captains: {
         A: null,
         B: null,
@@ -229,6 +230,7 @@ function validateState(nextState, fallbackQuestions = []) {
       pointsMultiplier: [1, 2, 3].includes(Number(nextState.round?.pointsMultiplier))
         ? Number(nextState.round.pointsMultiplier)
         : 1,
+      actionsLocked: Boolean(nextState.round?.actionsLocked),
       captains: {
         A: typeof nextState.round?.captains?.A === "string" ? nextState.round.captains.A : null,
         B: typeof nextState.round?.captains?.B === "string" ? nextState.round.captains.B : null,
@@ -394,6 +396,7 @@ function resetRoundInternals() {
   state.round.buzzerWinner = null;
   state.round.revealed = [];
   state.round.pointsMultiplier = 1;
+  state.round.actionsLocked = false;
   state.round.captains = {
     A: null,
     B: null,
@@ -408,6 +411,7 @@ function applyActionLocal(action, payload = {}) {
     case "OPEN_BUZZ": {
       state.round.status = "buzz-open";
       state.round.buzzerWinner = null;
+      state.round.actionsLocked = false;
       break;
     }
     case "LOCK_BUZZ": {
@@ -415,6 +419,7 @@ function applyActionLocal(action, payload = {}) {
         if (payload.team === "A" || payload.team === "B") {
           state.round.buzzerWinner = payload.team;
           state.round.status = "locked";
+          state.round.actionsLocked = false;
           emitSoundEvent("button");
         }
       }
@@ -424,15 +429,18 @@ function applyActionLocal(action, payload = {}) {
       if (state.round.buzzerWinner === "A") {
         state.round.buzzerWinner = "B";
         state.round.status = "locked";
+        state.round.actionsLocked = false;
       } else if (state.round.buzzerWinner === "B") {
         state.round.buzzerWinner = "A";
         state.round.status = "locked";
+        state.round.actionsLocked = false;
       }
       break;
     }
     case "CLEAR_ROUND_CONTROL": {
       state.round.buzzerWinner = null;
       state.round.status = "buzz-open";
+      state.round.actionsLocked = false;
       break;
     }
     case "RESET_ROUND": {
@@ -468,6 +476,10 @@ function applyActionLocal(action, payload = {}) {
         state.ui.winnerVersion = (Number(state.ui.winnerVersion) || 0) + 1;
       }
 
+      if (payload.lockRoundActions === true) {
+        state.round.actionsLocked = true;
+      }
+
       if (payload.playTriumph === true) {
         emitSoundEvent("triunfo");
       }
@@ -476,6 +488,10 @@ function applyActionLocal(action, payload = {}) {
     case "ADD_STRIKE": {
       const team = payload.team;
       if (team !== "A" && team !== "B") {
+        break;
+      }
+
+      if (state.round.actionsLocked) {
         break;
       }
 
@@ -699,6 +715,7 @@ function applyActionLocal(action, payload = {}) {
         state.round.status = "buzz-open";
         state.round.buzzerWinner = null;
         state.round.revealed = [];
+        state.round.actionsLocked = false;
         state.ui.teamBackAlertTeam = null;
       }
       break;
