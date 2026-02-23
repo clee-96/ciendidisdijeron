@@ -186,6 +186,35 @@ h1, h2, h3, h4, p {
   padding: 0.35rem 0.75rem;
 }
 
+.questions-pagination-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.15rem 0 0.55rem;
+}
+
+.questions-pagination-controls label {
+  font-size: 0.86rem;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+#questions-page-size {
+  min-height: 32px;
+  border: 1px solid rgba(90, 90, 90, 0.35);
+  background: #f6f4f4;
+  color: var(--text);
+  border-radius: 8px;
+  padding: 0.25rem 0.45rem;
+}
+
+.questions-pagination-nav {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 0.35rem;
+}
+
 .sort-btn {
   border: 0;
   background: transparent;
@@ -1197,6 +1226,19 @@ button:disabled {
 
   .question-actions .question-action-btn:last-child {
     margin-bottom: 0;
+  }
+
+  .questions-pagination-controls {
+    gap: 0.35rem;
+  }
+
+  .questions-pagination-nav {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .questions-pagination-nav .question-action-btn {
+    flex: 1;
   }
 
   .question-header-row {

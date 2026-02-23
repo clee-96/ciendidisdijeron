@@ -57,6 +57,22 @@
               <h4>Listado</h4>
               <button id="new-question" type="button" class="question-action-btn">Nueva Pregunta</button>
             </div>
+            <div class="questions-pagination-controls">
+              <label for="questions-page-size">Mostrar</label>
+              <select id="questions-page-size">
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+              </select>
+              <span id="questions-page-info" class="hint">Página 1 de 1</span>
+              <div class="questions-pagination-nav">
+                <button id="questions-first-page" type="button" class="question-action-btn">Primera</button>
+                <button id="questions-prev-page" type="button" class="question-action-btn">Anterior</button>
+                <button id="questions-next-page" type="button" class="question-action-btn">Siguiente</button>
+                <button id="questions-last-page" type="button" class="question-action-btn">Última</button>
+              </div>
+            </div>
             <div class="questions-table-wrap">
               <table class="questions-table">
                 <thead>

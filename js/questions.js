@@ -17,6 +17,12 @@ const typeItems = document.getElementById("type-items");
 const newTypeButton = document.getElementById("new-type");
 const questionItems = document.getElementById("question-items");
 const newQuestionButton = document.getElementById("new-question");
+const questionsPageSizeSelect = document.getElementById("questions-page-size");
+const questionsPageInfo = document.getElementById("questions-page-info");
+const questionsFirstPageButton = document.getElementById("questions-first-page");
+const questionsPrevPageButton = document.getElementById("questions-prev-page");
+const questionsNextPageButton = document.getElementById("questions-next-page");
+const questionsLastPageButton = document.getElementById("questions-last-page");
 const sortButtons = Array.from(document.querySelectorAll("[data-sort]"));
 const questionModal = document.getElementById("question-modal");
 const questionModalTitle = document.getElementById("question-modal-title");
@@ -59,6 +65,8 @@ let lastSoundEventVersion = null;
 let pendingSoundEvent = null;
 let audioUnlockConfigured = false;
 let pendingConfirmAction = null;
+let questionsPageSize = 10;
+let questionsPage = 1;
 
 function playSound(sound) {
   if (!sound) {
@@ -453,8 +461,40 @@ function renderQuestionList(state) {
   renderSortButtons();
 
   const sortedItems = getSortedItems(state);
+  const pageSize = [10, 25, 50, 100].includes(Number(questionsPageSize)) ? Number(questionsPageSize) : 10;
+  const totalItems = sortedItems.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  questionsPage = Math.min(Math.max(questionsPage, 1), totalPages);
 
-  sortedItems.forEach(({ question: item, index }) => {
+  if (questionsPageSizeSelect) {
+    questionsPageSizeSelect.value = String(pageSize);
+  }
+
+  const start = (questionsPage - 1) * pageSize;
+  const end = start + pageSize;
+  const pagedItems = sortedItems.slice(start, end);
+
+  if (questionsPageInfo) {
+    questionsPageInfo.textContent = `Página ${questionsPage} de ${totalPages} · ${totalItems} registros`;
+  }
+
+  if (questionsPrevPageButton) {
+    questionsPrevPageButton.disabled = questionsPage <= 1;
+  }
+
+  if (questionsNextPageButton) {
+    questionsNextPageButton.disabled = questionsPage >= totalPages;
+  }
+
+  if (questionsFirstPageButton) {
+    questionsFirstPageButton.disabled = questionsPage <= 1;
+  }
+
+  if (questionsLastPageButton) {
+    questionsLastPageButton.disabled = questionsPage >= totalPages;
+  }
+
+  pagedItems.forEach(({ question: item, index }) => {
     const row = document.createElement("tr");
     row.className = "question-row";
 
@@ -777,11 +817,72 @@ function attachEvents() {
         sortDirection = "asc";
       }
 
+      questionsPage = 1;
+
       if (currentState) {
         renderQuestionList(currentState);
       }
     });
   });
+
+  if (questionsPageSizeSelect) {
+    questionsPageSizeSelect.addEventListener("change", () => {
+      const nextValue = Number(questionsPageSizeSelect.value);
+      if (![10, 25, 50, 100].includes(nextValue)) {
+        return;
+      }
+
+      questionsPageSize = nextValue;
+      questionsPage = 1;
+      if (currentState) {
+        renderQuestionList(currentState);
+      }
+    });
+  }
+
+  if (questionsPrevPageButton) {
+    questionsPrevPageButton.addEventListener("click", () => {
+      if (questionsPage <= 1) {
+        return;
+      }
+
+      questionsPage -= 1;
+      if (currentState) {
+        renderQuestionList(currentState);
+      }
+    });
+  }
+
+  if (questionsNextPageButton) {
+    questionsNextPageButton.addEventListener("click", () => {
+      questionsPage += 1;
+      if (currentState) {
+        renderQuestionList(currentState);
+      }
+    });
+  }
+
+  if (questionsFirstPageButton) {
+    questionsFirstPageButton.addEventListener("click", () => {
+      questionsPage = 1;
+      if (currentState) {
+        renderQuestionList(currentState);
+      }
+    });
+  }
+
+  if (questionsLastPageButton) {
+    questionsLastPageButton.addEventListener("click", () => {
+      if (!currentState) {
+        return;
+      }
+
+      const totalItems = currentState.questions?.length || 0;
+      const pageSize = [10, 25, 50, 100].includes(Number(questionsPageSize)) ? Number(questionsPageSize) : 10;
+      questionsPage = Math.max(1, Math.ceil(totalItems / pageSize));
+      renderQuestionList(currentState);
+    });
+  }
 
 }
 
