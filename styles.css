@@ -630,6 +630,7 @@ button:disabled {
   inset: 0;
   display: grid;
   place-items: center;
+  background: transparent;
   pointer-events: none;
   z-index: 40;
 }
@@ -640,12 +641,14 @@ button:disabled {
   justify-content: center;
   gap: 0.65rem;
   padding: 0.4rem 0.6rem;
+  background: transparent;
 }
 
 .strike-overlay-image {
   width: clamp(70px, 12vw, 140px);
   height: auto;
   object-fit: contain;
+  background: transparent !important;
   filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.28));
 }
 

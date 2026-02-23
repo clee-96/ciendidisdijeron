@@ -31,6 +31,10 @@ const correctSound = new Audio("./assets/audio/correcto.mp3");
 const incorrectSound = new Audio("./assets/audio/incorrecto.mp3");
 const aJugarSound = new Audio("./assets/audio/a_jugar.mp3");
 const triunfoSound = new Audio("./assets/audio/triunfo.mp3");
+const STRIKE_IMAGE_SRC = "./assets/images/X.png?v=20260223";
+const STRIKE_OVERLAY_DEFAULT_MS = 1200;
+const STRIKE_OVERLAY_MIN_MS = 600;
+const STRIKE_OVERLAY_MAX_MS = 2500;
 
 let playerRegistered = false;
 let redirectingToCaptain = false;
@@ -38,14 +42,29 @@ let lastSoundEventVersion = null;
 let pendingSoundEvent = null;
 let audioUnlockConfigured = false;
 let strikeOverlayTimeoutId = null;
-let strikeSoundDurationMs = 1200;
+let strikeSoundDurationMs = STRIKE_OVERLAY_DEFAULT_MS;
+
+function hideStrikeOverlay() {
+  if (!strikeOverlayEl) {
+    return;
+  }
+
+  strikeOverlayEl.classList.add("hidden");
+  if (strikeOverlayTimeoutId) {
+    clearTimeout(strikeOverlayTimeoutId);
+    strikeOverlayTimeoutId = null;
+  }
+}
 
 incorrectSound.addEventListener("loadedmetadata", () => {
   const duration = Number(incorrectSound.duration);
   if (Number.isFinite(duration) && duration > 0) {
-    strikeSoundDurationMs = Math.max(500, Math.round(duration * 1000));
+    const ms = Math.round(duration * 1000);
+    strikeSoundDurationMs = Math.min(STRIKE_OVERLAY_MAX_MS, Math.max(STRIKE_OVERLAY_MIN_MS, ms));
   }
 });
+
+incorrectSound.addEventListener("ended", hideStrikeOverlay);
 
 function getStrikeOverlayCount(state) {
   const strikesA = Number(state.teams?.A?.strikes) || 0;
@@ -61,7 +80,7 @@ function renderStrikeOverlayImages(count) {
   strikeOverlayImagesEl.innerHTML = "";
   for (let index = 0; index < count; index += 1) {
     const image = document.createElement("img");
-    image.src = "./assets/images/X.png";
+    image.src = STRIKE_IMAGE_SRC;
     image.alt = "Strike";
     image.className = "strike-overlay-image";
     strikeOverlayImagesEl.appendChild(image);
@@ -82,8 +101,7 @@ function showStrikeOverlay(state) {
   }
 
   strikeOverlayTimeoutId = window.setTimeout(() => {
-    strikeOverlayEl.classList.add("hidden");
-    strikeOverlayTimeoutId = null;
+    hideStrikeOverlay();
   }, strikeSoundDurationMs);
 }
 
