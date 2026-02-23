@@ -306,9 +306,7 @@ function renderCaptainSelect(state, team, selectEl) {
   });
 
   const validCaptain = players.some((player) => player.id === currentCaptainId);
-  if (document.activeElement !== selectEl) {
-    selectEl.value = validCaptain ? currentCaptainId : "";
-  }
+  selectEl.value = validCaptain ? currentCaptainId : "";
 }
 
 function renderQuestionTypeSelect(state) {

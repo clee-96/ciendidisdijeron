@@ -985,21 +985,37 @@ button:disabled {
   }
 
   .question-header-row {
-    grid-template-columns: 1fr;
-    gap: 0.25rem;
-    justify-items: center;
-    text-align: center;
+    grid-template-columns: auto 1fr auto;
+    gap: 0.45rem;
+    align-items: center;
   }
 
-  .question-header-row .badge,
-  .question-header-row .question-type-indicator,
+  .question-header-row .badge {
+    text-align: left;
+  }
+
+  .question-header-row .question-type-indicator {
+    text-align: center;
+    font-size: 0.84rem;
+  }
+
   .question-header-row .round-multiplier-indicator {
-    width: 100%;
-    text-align: center;
+    text-align: right;
   }
 
-  .question-type-indicator {
-    font-size: 0.86rem;
+  .questions-table .question-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-top: 0.2rem;
+  }
+
+  .questions-table .question-actions .question-action-btn {
+    width: auto;
+    min-height: 28px;
+    font-size: 0.72rem;
+    padding: 0.2rem 0.45rem;
+    margin: 0;
   }
 
   .answers-config-table,
