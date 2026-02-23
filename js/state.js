@@ -736,7 +736,6 @@ function applyActionLocal(action, payload = {}) {
       state.teams.B.score = 0;
       state.round.questionIndex = -1;
       state.ui.winnerTeam = null;
-      state.ui.winnerVersion = 0;
       resetRoundInternals();
       break;
     }
