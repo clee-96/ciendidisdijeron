@@ -9,7 +9,7 @@
   <body>
     <main class="layout">
       <header class="topbar">
-        <h1>Cómo jugar 100 Mexicanos Dijeron</h1>
+        <h1>Cómo jugar Cien Didis Dijeron</h1>
         <div class="inline-controls">
           <a class="link-btn" href="./admin.html" target="_blank" rel="noopener">Volver a Admin</a>
           <a class="link-btn" href="./index.html" target="_blank" rel="noopener">Ver Pantalla de Juego</a>
@@ -17,35 +17,37 @@
       </header>
 
       <section class="editor-card">
-        <h3>Objetivo del juego</h3>
-        <p>Dos equipos compiten para adivinar las respuestas más populares que dio una encuesta. Cada respuesta tiene un puntaje y gana el equipo con mayor puntuación total.</p>
+        <h3>Objetivo</h3>
+        <p>Dos equipos compiten para adivinar las respuestas más populares de cada pregunta. Cada respuesta vale puntos y gana el equipo que llegue primero a la meta o termine con más puntaje.</p>
       </section>
 
       <section class="editor-card">
-        <h3>Flujo básico de una ronda</h3>
-        <p><strong>1) Inicio:</strong> El administrador pulsa <strong>Siguiente Pregunta</strong>. En ese momento comienza la ronda y suena el audio de inicio.</p>
-        <p><strong>2) Buzzer:</strong> El capitán asignado de cada equipo intenta ganar el control de la ronda con el buzzer.</p>
-        <p><strong>3) Respuestas:</strong> El administrador revela respuestas con <strong>Mostrar</strong> cuando un equipo acierta.</p>
-        <p><strong>4) Strikes:</strong> Si falla un intento, el administrador pulsa <strong>Agregar Strike</strong> al equipo correspondiente.</p>
-        <p><strong>5) Cierre:</strong> Cuando termina la ronda, el administrador elige:</p>
-        <p>- <strong>Termina Ronda:</strong> suma los puntos mostrados al equipo con control.</p>
-        <p>- <strong>Robo de Puntos:</strong> suma esos puntos al equipo contrario.</p>
+        <h3>Cómo se juega una ronda</h3>
+        <p><strong>1) Pregunta en pantalla:</strong> inicia una nueva pregunta para ambos equipos.</p>
+        <p><strong>2) Buzzer de capitanes:</strong> el capitán que pulse primero gana el control de la ronda.</p>
+        <p><strong>3) Intentos del equipo con control:</strong> cada acierto revela una respuesta con su puntaje.</p>
+        <p><strong>4) Strikes:</strong> los errores suman strikes al equipo que tiene el control.</p>
+        <p><strong>5) Cierre de ronda:</strong> se asignan los puntos acumulados según el resultado de la ronda.</p>
       </section>
 
       <section class="editor-card">
-        <h3>Controles importantes del administrador</h3>
-        <p><strong>Multiplicador de ronda:</strong> x1, x2 o x3, aplicado a los puntos de cierre.</p>
-        <p><strong>Quitar Control de Ronda:</strong> deja la ronda sin equipo con control.</p>
-        <p><strong>Pregunta 0/n:</strong> estado previo al arranque, donde la pregunta aún no se muestra hasta pulsar <strong>Siguiente Pregunta</strong>.</p>
+        <h3>Puntaje</h3>
+        <p>Las respuestas tienen valores distintos. Mientras más popular sea la respuesta, más puntos otorga.</p>
+        <p>En ciertas rondas puede existir multiplicador de puntos.</p>
+        <p>La partida celebra al equipo ganador al alcanzar la meta de puntos.</p>
       </section>
 
       <section class="editor-card">
-        <h3>Sistema de sonido</h3>
-        <p>Los sonidos se sincronizan para todos los clientes abiertos del juego:</p>
-        <p>- <strong>correcto.mp3</strong> al mostrar una respuesta.</p>
-        <p>- <strong>incorrecto.mp3</strong> al agregar un strike.</p>
-        <p>- <strong>a_jugar.mp3</strong> al iniciar la siguiente pregunta.</p>
-        <p>- <strong>triunfo.mp3</strong> al cerrar ronda con <strong>Termina Ronda</strong> o <strong>Robo de Puntos</strong>.</p>
+        <h3>Recomendaciones para jugadores</h3>
+        <p><strong>Escucha completa:</strong> espera a que termine de leerse o mostrarse la pregunta antes de responder.</p>
+        <p><strong>Comunicación rápida:</strong> el equipo con control debe acordar respuesta en pocos segundos.</p>
+        <p><strong>Evita arriesgar de más:</strong> cada strike acerca la oportunidad de robo del rival.</p>
+        <p><strong>Juega en equipo:</strong> distribuyan temas y aprovechen fortalezas de cada integrante.</p>
+      </section>
+
+      <section class="editor-card">
+        <h3>Dinámica sugerida para anfitrión</h3>
+        <p>Arma equipos balanceados, define reglas de tiempo por respuesta y mantén ritmo ágil entre preguntas para que la experiencia sea divertida para todos.</p>
       </section>
     </main>
   </body>
