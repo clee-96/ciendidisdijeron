@@ -990,13 +990,28 @@ button:disabled {
 
   .inline-controls {
     width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
   }
 
-  .inline-controls .status-badge,
+  .inline-controls .status-badge {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-content: center;
+    min-height: 30px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.76rem;
+  }
+
   .inline-controls .link-btn,
   .inline-controls button {
     width: 100%;
     justify-content: center;
+    min-height: 36px;
+    padding: 0.42rem 0.55rem;
+    font-size: 0.86rem;
+    line-height: 1.1;
   }
 
   .scoreboard {
@@ -1005,13 +1020,44 @@ button:disabled {
 
   .control-grid {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem;
   }
 
   .control-grid button,
   .control-grid .link-btn {
     width: 100%;
     justify-content: center;
+    min-height: 36px;
+    padding: 0.42rem 0.55rem;
+    font-size: 0.86rem;
+    line-height: 1.1;
+  }
+
+  #toggle-qr,
+  #clear-round-control,
+  #logout-all-players,
+  #reset-round,
+  #reset-game {
+    width: 100%;
+  }
+
+  #reset-game {
+    grid-column: 1 / -1;
+  }
+
+  .round-multiplier-row {
+    gap: 0.4rem;
+  }
+
+  .round-multiplier-row label {
+    font-size: 0.88rem;
+  }
+
+  .round-multiplier-select {
+    min-height: 34px;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.84rem;
   }
 
   .question-card,
