@@ -1,0 +1,7 @@
+Archivo: supabase_backup_20260224_152451.json
+Generado: 2026-02-24T21:24:51.684721Z
+Source URL: https://hazodxcwcxeripkbnzjy.supabase.co
+ROOM_CODE config: SALA1
+game_rooms: 2
+game_question_types: 5
+game_questions: 25
