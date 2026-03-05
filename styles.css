@@ -1108,14 +1108,14 @@ button:disabled {
       background: #f38031;
       color: #f6f4f4;
       border-color: #f38031;
-      box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(243, 128, 49, 0.55), 0 0 0 2px rgba(243, 128, 49, 0.12);
+      box-shadow: 0 0 0 1px rgba(243, 128, 49, 0.28);
       font-weight: 800;
       border-radius: 10px;
     }
 
     [data-tab-panel]:not(.admin-tab-hidden) {
       border-radius: 14px;
-      box-shadow: 0 0 0 1px rgba(243, 128, 49, 0.4);
+      box-shadow: 0 0 0 1px rgba(243, 128, 49, 0.24);
     }
 
   .layout {
