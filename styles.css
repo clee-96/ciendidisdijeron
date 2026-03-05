@@ -694,6 +694,17 @@ button:disabled {
   color: var(--accent);
 }
 
+.round-closed-hint {
+  margin: 0.45rem 0 0.2rem;
+  padding: 0.42rem 0.6rem;
+  border: 1px solid rgba(243, 128, 49, 0.28);
+  border-radius: 10px;
+  background: rgba(243, 128, 49, 0.08);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
 .round-control-indicator {
   color: var(--accent);
   font-weight: 700;

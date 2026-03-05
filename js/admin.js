@@ -49,6 +49,7 @@ const resetGameButton = document.getElementById("reset-game");
 const finishGameButton = document.getElementById("finish-game");
 const adminSupabaseStatus = document.getElementById("admin-supabase-status");
 const adminBuzzerStatus = document.getElementById("admin-buzzer-status");
+const roundClosedHint = document.getElementById("round-closed-hint");
 const adminRoundLabel = document.getElementById("admin-round-label");
 const adminQuestionText = document.getElementById("admin-question-text");
 const adminAnswersList = document.getElementById("admin-answers-list");
@@ -579,6 +580,9 @@ function render(state) {
   const questionStarted = Number(state.round.questionIndex) >= 0;
   const canGoNextByRound = !questionStarted || actionsLocked;
   nextQuestionButton.disabled = state.round.questionIndex >= playableQuestions.length - 1 || !canGoNextByRound;
+  const isLastQuestion = playableQuestions.length > 0 && state.round.questionIndex >= playableQuestions.length - 1;
+  const showRoundClosedHint = actionsLocked && !isLastQuestion;
+  roundClosedHint.classList.toggle("hidden", !showRoundClosedHint);
 
   if (!question) {
     if (playableQuestions.length && state.round.questionIndex < 0) {
@@ -589,6 +593,7 @@ function render(state) {
       adminQuestionText.textContent = "Importa o crea preguntas";
     }
     adminAnswersList.innerHTML = "";
+    roundClosedHint.classList.add("hidden");
     return;
   }
 
