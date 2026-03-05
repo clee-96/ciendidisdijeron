@@ -43,7 +43,6 @@ const logoutAllPlayersButton = document.getElementById("logout-all-players");
 const winningScoreSelect = document.getElementById("winning-score-select");
 const roundMultiplierSelect = document.getElementById("round-multiplier-select");
 const gameQuestionTypeSelect = document.getElementById("game-question-type-select");
-const resetRoundButton = document.getElementById("reset-round");
 const nextQuestionButton = document.getElementById("next-question");
 const resetGameButton = document.getElementById("reset-game");
 const finishGameButton = document.getElementById("finish-game");
@@ -719,9 +718,6 @@ function attachEvents() {
   });
   logoutAllPlayersButton.addEventListener("click", () => {
     openConfirmModal("¿Seguro que deseas expulsar a todos los jugadores?", () => dispatch("LOGOUT_ALL_PLAYERS"));
-  });
-  resetRoundButton.addEventListener("click", () => {
-    openConfirmModal("¿Seguro que deseas resetear la ronda actual?", () => dispatch("RESET_ROUND"));
   });
   nextQuestionButton.addEventListener("click", () => dispatch("NEXT_QUESTION"));
   resetGameButton.addEventListener("click", () => {

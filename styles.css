@@ -31,19 +31,26 @@ body {
 }
 
 .topbar {
-  display: flex;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 1rem;
-  flex-wrap: wrap;
 }
 
 .topbar-menu-toggle {
-  margin-left: auto;
+  justify-self: end;
+  background: #5a5a5a;
+  color: #f6f4f4;
+  border-color: rgba(90, 90, 90, 0.35);
 }
 
 .inline-controls {
   width: 100%;
+  grid-column: 1 / -1;
+  padding: 0.55rem;
+  border-radius: 10px;
+  background: rgba(90, 90, 90, 0.12);
+  border: 1px solid rgba(90, 90, 90, 0.22);
 }
 
 .inline-controls.collapsed {
@@ -1062,12 +1069,12 @@ button:disabled {
   }
 
   .topbar {
-    flex-direction: column;
-    align-items: flex-start;
+    grid-template-columns: 1fr auto;
+    align-items: center;
   }
 
   .topbar-menu-toggle {
-    margin-left: 0;
+    justify-self: end;
   }
 
   .inline-controls {
@@ -1077,10 +1084,9 @@ button:disabled {
     gap: 0.35rem;
   }
 
-  .inline-controls .status-badge {
-    grid-column: 1 / -1;
-    width: 100%;
-    justify-content: center;
+  .topbar .status-badge {
+    grid-column: 1 / 2;
+    justify-self: start;
     min-height: 30px;
     padding: 0.25rem 0.5rem;
     font-size: 0.76rem;
@@ -1119,7 +1125,6 @@ button:disabled {
   #toggle-qr,
   #clear-round-control,
   #logout-all-players,
-  #reset-round,
   #reset-game,
   #finish-game {
     width: 100%;
