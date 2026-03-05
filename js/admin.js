@@ -499,6 +499,8 @@ function render(state) {
   adminScoreB.textContent = state.teams.B.score;
   adminStrikesA.textContent = String(state.teams.A.strikes || 0);
   adminStrikesB.textContent = String(state.teams.B.strikes || 0);
+  const hasActivePlayers = (state.players || []).some((player) => player.active);
+  logoutAllPlayersButton.disabled = !hasActivePlayers;
   renderTeamMembers(state, "A", teamMembersA, captainNameInputA);
   renderTeamMembers(state, "B", teamMembersB, captainNameInputB);
   syncInputValue(captainNameInputA, state.round?.captains?.A || "");
