@@ -679,10 +679,14 @@ function attachEvents() {
       return;
     }
 
+    const playableQuestions = getPlayableQuestions(state);
+    const isLastQuestionInRound = playableQuestions.length > 0 && state.round.questionIndex >= playableQuestions.length - 1;
     const multiplier = [1, 2, 3].includes(Number(state.round.pointsMultiplier)) ? Number(state.round.pointsMultiplier) : 1;
 
     await dispatch("ADD_SCORE", { team: controlTeam, points: points * multiplier, playTriumph: true, lockRoundActions: true });
-    await dispatch("SET_QUESTION_INDEX", { index: -1 });
+    if (isLastQuestionInRound) {
+      await dispatch("SET_QUESTION_INDEX", { index: -1 });
+    }
   });
   stealRevealedPointsButton.addEventListener("click", async () => {
     const state = getState();
@@ -697,10 +701,14 @@ function attachEvents() {
       return;
     }
 
+    const playableQuestions = getPlayableQuestions(state);
+    const isLastQuestionInRound = playableQuestions.length > 0 && state.round.questionIndex >= playableQuestions.length - 1;
     const multiplier = [1, 2, 3].includes(Number(state.round.pointsMultiplier)) ? Number(state.round.pointsMultiplier) : 1;
 
     await dispatch("ADD_SCORE", { team: targetTeam, points: points * multiplier, playTriumph: true, lockRoundActions: true });
-    await dispatch("SET_QUESTION_INDEX", { index: -1 });
+    if (isLastQuestionInRound) {
+      await dispatch("SET_QUESTION_INDEX", { index: -1 });
+    }
   });
   winningScoreSelect.addEventListener("change", (event) => {
     if (!isUserSelectChange(event) || Number(getState().round?.questionIndex) >= 0) {
