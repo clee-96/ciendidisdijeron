@@ -8,6 +8,8 @@ const pinForm = document.getElementById("pin-form");
 const pinInput = document.getElementById("pin-input");
 const pinError = document.getElementById("pin-error");
 const adminApp = document.getElementById("admin-app");
+const topbarMenuToggle = document.getElementById("topbar-menu-toggle");
+const topbarControls = document.getElementById("topbar-controls");
 const logoutAdminButton = document.getElementById("logout-admin");
 
 const adminTeamNameA = document.getElementById("admin-team-name-a");
@@ -43,7 +45,6 @@ const roundMultiplierSelect = document.getElementById("round-multiplier-select")
 const gameQuestionTypeSelect = document.getElementById("game-question-type-select");
 const resetRoundButton = document.getElementById("reset-round");
 const nextQuestionButton = document.getElementById("next-question");
-const prevQuestionButton = document.getElementById("prev-question");
 const resetGameButton = document.getElementById("reset-game");
 const finishGameButton = document.getElementById("finish-game");
 const adminSupabaseStatus = document.getElementById("admin-supabase-status");
@@ -76,6 +77,12 @@ let lastWinnerVersionShown = 0;
 let winnerModalTimeoutId = null;
 let lastWinnerFallbackKeyShown = "";
 let pendingWinnerToken = null;
+
+function toggleTopbarMenu(forceOpen = null) {
+  const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : topbarControls.classList.contains("collapsed");
+  topbarControls.classList.toggle("collapsed", !shouldOpen);
+  topbarMenuToggle.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+}
 
 function runWithSelectSync(callback) {
   syncingSelects += 1;
@@ -544,8 +551,9 @@ function render(state) {
   awardRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0 || actionsLocked;
   stealRevealedPointsButton.disabled = !(controlTeam === "A" || controlTeam === "B") || revealedPoints <= 0 || actionsLocked || !hasTeamWithThreeStrikes;
   addStrikeControlButton.disabled = !(controlTeam === "A" || controlTeam === "B") || actionsLocked || controlTeamStrikes >= 3;
-  prevQuestionButton.disabled = state.round.questionIndex <= 0;
-  nextQuestionButton.disabled = state.round.questionIndex >= playableQuestions.length - 1;
+  const questionStarted = Number(state.round.questionIndex) >= 0;
+  const canGoNextByRound = !questionStarted || actionsLocked;
+  nextQuestionButton.disabled = state.round.questionIndex >= playableQuestions.length - 1 || !canGoNextByRound;
 
   if (!question) {
     if (playableQuestions.length && state.round.questionIndex < 0) {
@@ -652,7 +660,6 @@ function attachEvents() {
     const multiplier = [1, 2, 3].includes(Number(state.round.pointsMultiplier)) ? Number(state.round.pointsMultiplier) : 1;
 
     await dispatch("ADD_SCORE", { team: controlTeam, points: points * multiplier, playTriumph: true, lockRoundActions: true });
-    await dispatch("RESET_ROUND");
   });
   stealRevealedPointsButton.addEventListener("click", async () => {
     const state = getState();
@@ -670,7 +677,6 @@ function attachEvents() {
     const multiplier = [1, 2, 3].includes(Number(state.round.pointsMultiplier)) ? Number(state.round.pointsMultiplier) : 1;
 
     await dispatch("ADD_SCORE", { team: targetTeam, points: points * multiplier, playTriumph: true, lockRoundActions: true });
-    await dispatch("RESET_ROUND");
   });
   winningScoreSelect.addEventListener("change", (event) => {
     if (!isUserSelectChange(event) || Number(getState().round?.questionIndex) >= 0) {
@@ -718,7 +724,6 @@ function attachEvents() {
     openConfirmModal("¿Seguro que deseas resetear la ronda actual?", () => dispatch("RESET_ROUND"));
   });
   nextQuestionButton.addEventListener("click", () => dispatch("NEXT_QUESTION"));
-  prevQuestionButton.addEventListener("click", () => dispatch("PREV_QUESTION"));
   resetGameButton.addEventListener("click", () => {
     openConfirmModal("¿Seguro que deseas resetear toda la partida?", () => dispatch("RESET_GAME"));
   });
@@ -762,6 +767,27 @@ function attachEvents() {
   });
 
   winnerAcceptButton.addEventListener("click", closeWinnerModal);
+
+  topbarMenuToggle.addEventListener("click", () => {
+    toggleTopbarMenu();
+  });
+
+  topbarControls.addEventListener("click", (event) => {
+    const option = event.target.closest("a, button");
+    if (!option || option.id === "topbar-menu-toggle") {
+      return;
+    }
+
+    if (window.innerWidth <= 900) {
+      toggleTopbarMenu(false);
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 900) {
+      toggleTopbarMenu(true);
+    }
+  });
 
   logoutAdminButton.addEventListener("click", () => {
     localStorage.removeItem(ADMIN_AUTH_KEY);
@@ -867,6 +893,7 @@ async function main() {
   }
 
   await initializeState(defaults);
+  toggleTopbarMenu(window.innerWidth > 900);
   subscribeConnectionStatus(renderSupabaseStatus);
   subscribe(render);
 }

@@ -20,8 +20,10 @@
     <main id="admin-app" class="layout admin hidden">
       <header class="topbar">
         <h1>Administrador</h1>
-        <div class="inline-controls">
+        <button id="topbar-menu-toggle" type="button" class="topbar-menu-toggle" aria-expanded="false" aria-controls="topbar-controls">☰ Menú</button>
+        <div id="topbar-controls" class="inline-controls collapsed">
           <span id="admin-supabase-status" class="status-badge status-connecting">Base de Datos: conectando...</span>
+          <button id="toggle-qr" type="button">Mostrar QR</button>
           <a class="link-btn" href="./index.html" target="_blank" rel="noopener">Abrir Pantalla de Juego</a>
           <a class="link-btn" href="./questions.html" target="_blank" rel="noopener">Ir a Preguntas</a>
           <a class="link-btn" href="./instructions.html" target="_blank" rel="noopener">Ver Instrucciones</a>
@@ -106,7 +108,6 @@
           <select id="game-question-type-select" class="round-multiplier-select"></select>
         </div>
         <div class="control-grid">
-          <button id="toggle-qr">Mostrar QR</button>
           <button id="clear-round-control">Quitar Control de Ronda</button>
           <button id="logout-all-players">Expulsar todos los jugadores</button>
           <button id="reset-round">Reiniciar Ronda</button>
@@ -118,7 +119,7 @@
 
       <section class="question-card">
         <div class="question-nav-controls">
-          <button id="prev-question">Pregunta Anterior</button>
+          <div class="question-nav-spacer" aria-hidden="true"></div>
           <div class="question-center-actions">
             <button id="award-revealed-points">Sumar Respuestas</button>
             <button id="steal-revealed-points">Robo de Puntos</button>
