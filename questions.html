@@ -21,10 +21,10 @@
       <header class="topbar">
         <h1>Editor de Preguntas</h1>
         <span id="questions-supabase-status" class="status-badge status-connecting">Base de Datos: conectando...</span>
-        <button id="topbar-menu-toggle" type="button" class="topbar-menu-toggle" aria-expanded="false" aria-controls="topbar-controls">☰ Menú</button>
+        <button id="topbar-menu-toggle" type="button" class="topbar-menu-toggle btn-with-icon" aria-expanded="false" aria-controls="topbar-controls"><span class="action-icon action-icon-menu" aria-hidden="true"></span>Menú</button>
         <div id="topbar-controls" class="inline-controls collapsed">
-          <a class="link-btn" href="./admin.html" target="_blank" rel="noopener">Abrir Panel Admin</a>
-          <button id="logout-admin" type="button" class="danger">Cerrar sesión</button>
+          <a class="link-btn btn-with-icon icon-white-btn" href="./admin.html" target="_blank" rel="noopener"><span class="action-icon action-icon-admin" aria-hidden="true"></span>Panel Admin</a>
+          <button id="logout-admin" type="button" class="danger btn-with-icon icon-white-btn"><span class="action-icon action-icon-logout" aria-hidden="true"></span>Cerrar sesión</button>
         </div>
       </header>
 
@@ -33,7 +33,7 @@
         <p id="types-summary" class="hint"></p>
         <div class="questions-list-header">
           <h4>Tipos disponibles</h4>
-          <button id="new-type" type="button" class="question-action-btn">Nuevo Tipo</button>
+          <button id="new-type" type="button" class="question-action-btn btn-with-icon icon-white-btn"><span class="action-icon action-icon-add" aria-hidden="true"></span>Nuevo Tipo</button>
         </div>
         <div class="questions-table-wrap">
           <table class="questions-table">
@@ -56,7 +56,7 @@
           <aside>
             <div class="questions-list-header">
               <h4>Listado</h4>
-              <button id="new-question" type="button" class="question-action-btn">Nueva Pregunta</button>
+              <button id="new-question" type="button" class="question-action-btn btn-with-icon icon-white-btn"><span class="action-icon action-icon-add" aria-hidden="true"></span>Nueva Pregunta</button>
             </div>
             <div class="questions-pagination-controls">
               <label for="questions-page-size">Mostrar</label>
@@ -68,10 +68,10 @@
               </select>
               <span id="questions-page-info" class="hint">Página 1 de 1</span>
               <div class="questions-pagination-nav">
-                <button id="questions-first-page" type="button" class="question-action-btn">Primera</button>
-                <button id="questions-prev-page" type="button" class="question-action-btn">Anterior</button>
-                <button id="questions-next-page" type="button" class="question-action-btn">Siguiente</button>
-                <button id="questions-last-page" type="button" class="question-action-btn">Última</button>
+                <button id="questions-first-page" type="button" class="question-action-btn icon-only-btn" title="Primera" aria-label="Primera"><span class="action-icon action-icon-first" aria-hidden="true"></span></button>
+                <button id="questions-prev-page" type="button" class="question-action-btn icon-only-btn" title="Anterior" aria-label="Anterior"><span class="action-icon action-icon-prev" aria-hidden="true"></span></button>
+                <button id="questions-next-page" type="button" class="question-action-btn icon-only-btn" title="Siguiente" aria-label="Siguiente"><span class="action-icon action-icon-next" aria-hidden="true"></span></button>
+                <button id="questions-last-page" type="button" class="question-action-btn icon-only-btn" title="Última" aria-label="Última"><span class="action-icon action-icon-last" aria-hidden="true"></span></button>
               </div>
             </div>
             <div class="questions-table-wrap">
@@ -101,7 +101,7 @@
           <p id="question-modal-error" class="error-text"></p>
           <div class="mini-modal-actions">
             <button id="question-modal-cancel" type="button" class="danger">Cancelar</button>
-            <button id="question-modal-save" type="button">Guardar</button>
+            <button id="question-modal-save" type="button" class="btn-with-icon"><span class="action-icon action-icon-save" aria-hidden="true"></span>Guardar</button>
           </div>
         </div>
       </div>
@@ -109,12 +109,14 @@
       <div id="type-modal" class="mini-modal hidden" role="dialog" aria-modal="true" aria-labelledby="type-modal-title">
         <div class="mini-modal-card">
           <h3 id="type-modal-title">Tipo</h3>
+          <label class="modal-field-label" for="type-modal-name-input">Nombre</label>
           <input id="type-modal-name-input" placeholder="Nombre del tipo" />
+          <label class="modal-field-label" for="type-modal-description-input">Descripción</label>
           <input id="type-modal-description-input" placeholder="Descripción corta" />
           <p id="type-modal-error" class="error-text"></p>
           <div class="mini-modal-actions">
             <button id="type-modal-cancel" type="button" class="danger">Cancelar</button>
-            <button id="type-modal-save" type="button">Guardar</button>
+            <button id="type-modal-save" type="button" class="btn-with-icon"><span class="action-icon action-icon-save" aria-hidden="true"></span>Guardar</button>
           </div>
         </div>
       </div>

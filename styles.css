@@ -350,6 +350,218 @@ h1, h2, h3, h4, p {
   font-size: 0.82rem;
 }
 
+.btn-with-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+}
+
+.icon-only-btn {
+  min-width: 34px;
+  width: 34px;
+  padding: 0.35rem;
+  display: inline-grid;
+  place-items: center;
+  background: rgba(246, 244, 244, 0.95);
+  border-color: rgba(243, 128, 49, 0.35);
+  color: var(--accent);
+}
+
+.action-icon {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+
+.action-icon-edit {
+  background-image: url("./assets/icons/filled/edit.svg");
+}
+
+.action-icon-delete {
+  background-image: url("./assets/icons/filled/trash.svg");
+}
+
+.action-icon-add {
+  background-image: url("./assets/icons/filled/plus.svg");
+}
+
+.action-icon-sub {
+  background-image: url("./assets/icons/filled/square-minus.svg");
+}
+
+.action-icon-save {
+  background-image: url("./assets/icons/filled/device-floppy.svg");
+}
+
+.action-icon-menu {
+  background-image: url("./assets/icons/filled/menu-2.svg");
+}
+
+.action-icon-qr {
+  background-image: url("./assets/icons/filled/zoom-scan.svg");
+}
+
+.action-icon-game {
+  background-image: url("./assets/icons/filled/device-tv.svg");
+}
+
+.action-icon-questions {
+  background-image: url("./assets/icons/filled/clipboard-list.svg");
+}
+
+.action-icon-instructions {
+  background-image: url("./assets/icons/filled/book.svg");
+}
+
+.action-icon-admin {
+  background-image: url("./assets/icons/filled/layout-dashboard.svg");
+}
+
+.action-icon-logout {
+  background-image: url("./assets/icons/filled/sign-left.svg");
+}
+
+.action-icon-detail {
+  background-image: url("./assets/icons/filled/list-details.svg");
+}
+
+.action-icon-first {
+  background-image: url("./assets/icons/filled/square-chevrons-left.svg");
+}
+
+.action-icon-prev {
+  background-image: url("./assets/icons/filled/square-chevron-left.svg");
+}
+
+.action-icon-next {
+  background-image: url("./assets/icons/filled/square-chevron-right.svg");
+}
+
+.action-icon-last {
+  background-image: url("./assets/icons/filled/square-chevrons-right.svg");
+}
+
+.icon-white-btn .action-icon {
+  filter: brightness(0) invert(1);
+}
+
+.icon-only-btn.active {
+  border-color: rgba(243, 128, 49, 0.65);
+  background: rgba(243, 128, 49, 0.14);
+}
+
+@supports ((mask-image: url("")) or (-webkit-mask-image: url(""))) {
+  .action-icon {
+    background-image: none;
+    background-color: var(--accent);
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+  }
+
+  .icon-only-btn .action-icon {
+    background-color: currentColor;
+  }
+
+  .action-icon-edit {
+    mask-image: url("./assets/icons/filled/edit.svg");
+    -webkit-mask-image: url("./assets/icons/filled/edit.svg");
+  }
+
+  .action-icon-delete {
+    mask-image: url("./assets/icons/filled/trash.svg");
+    -webkit-mask-image: url("./assets/icons/filled/trash.svg");
+  }
+
+  .action-icon-add {
+    mask-image: url("./assets/icons/filled/plus.svg");
+    -webkit-mask-image: url("./assets/icons/filled/plus.svg");
+  }
+
+  .action-icon-sub {
+    mask-image: url("./assets/icons/filled/square-minus.svg");
+    -webkit-mask-image: url("./assets/icons/filled/square-minus.svg");
+  }
+
+  .action-icon-save {
+    mask-image: url("./assets/icons/filled/device-floppy.svg");
+    -webkit-mask-image: url("./assets/icons/filled/device-floppy.svg");
+  }
+
+  .action-icon-menu {
+    mask-image: url("./assets/icons/filled/menu-2.svg");
+    -webkit-mask-image: url("./assets/icons/filled/menu-2.svg");
+  }
+
+  .action-icon-qr {
+    mask-image: url("./assets/icons/filled/zoom-scan.svg");
+    -webkit-mask-image: url("./assets/icons/filled/zoom-scan.svg");
+  }
+
+  .action-icon-game {
+    mask-image: url("./assets/icons/filled/device-tv.svg");
+    -webkit-mask-image: url("./assets/icons/filled/device-tv.svg");
+  }
+
+  .action-icon-questions {
+    mask-image: url("./assets/icons/filled/clipboard-list.svg");
+    -webkit-mask-image: url("./assets/icons/filled/clipboard-list.svg");
+  }
+
+  .action-icon-instructions {
+    mask-image: url("./assets/icons/filled/book.svg");
+    -webkit-mask-image: url("./assets/icons/filled/book.svg");
+  }
+
+  .action-icon-admin {
+    mask-image: url("./assets/icons/filled/layout-dashboard.svg");
+    -webkit-mask-image: url("./assets/icons/filled/layout-dashboard.svg");
+  }
+
+  .action-icon-logout {
+    mask-image: url("./assets/icons/filled/sign-left.svg");
+    -webkit-mask-image: url("./assets/icons/filled/sign-left.svg");
+  }
+
+  .action-icon-detail {
+    mask-image: url("./assets/icons/filled/list-details.svg");
+    -webkit-mask-image: url("./assets/icons/filled/list-details.svg");
+  }
+
+  .action-icon-first {
+    mask-image: url("./assets/icons/filled/square-chevrons-left.svg");
+    -webkit-mask-image: url("./assets/icons/filled/square-chevrons-left.svg");
+  }
+
+  .action-icon-prev {
+    mask-image: url("./assets/icons/filled/square-chevron-left.svg");
+    -webkit-mask-image: url("./assets/icons/filled/square-chevron-left.svg");
+  }
+
+  .action-icon-next {
+    mask-image: url("./assets/icons/filled/square-chevron-right.svg");
+    -webkit-mask-image: url("./assets/icons/filled/square-chevron-right.svg");
+  }
+
+  .action-icon-last {
+    mask-image: url("./assets/icons/filled/square-chevrons-right.svg");
+    -webkit-mask-image: url("./assets/icons/filled/square-chevrons-right.svg");
+  }
+
+  .icon-white-btn .action-icon {
+    background-color: #fff;
+    filter: none;
+  }
+}
+
 .question-action-btn.answer-toggle-locked {
   background: rgba(90, 90, 90, 0.35);
   color: rgba(246, 244, 244, 0.85);
@@ -512,10 +724,12 @@ h1, h2, h3, h4, p {
   justify-self: end;
 }
 
-#topbar-controls #toggle-qr {
-  display: flex;
-  justify-content: flex-start;
-  text-align: left;
+#topbar-controls .link-btn,
+#topbar-controls button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 button,
@@ -1040,6 +1254,14 @@ button:disabled {
   color: var(--accent);
   font-size: 0.86rem;
   font-weight: 700;
+}
+
+.modal-field-label {
+  display: block;
+  margin: -0.1rem 0 -0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
 }
 
 .winner-modal {

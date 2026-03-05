@@ -454,8 +454,8 @@ function renderTeamMembers(state, team, container, captainInput) {
       <div class="team-member-actions">
         <button type="button" class="question-action-btn captain-copy-btn" title="Copiar a capitán" data-captain-copy="${player.id}">Capitán</button>
         ${isManual
-    ? `<button type="button" class="question-action-btn" data-player-edit="${player.id}">Editar</button>
-             <button type="button" class="question-action-btn danger" data-player-delete="${player.id}">Eliminar</button>`
+    ? `<button type="button" class="question-action-btn icon-only-btn" title="Editar" aria-label="Editar" data-player-edit="${player.id}"><span class="action-icon action-icon-edit" aria-hidden="true"></span></button>
+             <button type="button" class="question-action-btn icon-only-btn" title="Eliminar" aria-label="Eliminar" data-player-delete="${player.id}"><span class="action-icon action-icon-delete" aria-hidden="true"></span></button>`
     : `<button type="button" class="question-action-btn" data-player-logout="${player.id}">Cerrar sesión</button>`}
       </div>
     `;

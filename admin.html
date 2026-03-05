@@ -21,13 +21,13 @@
       <header class="topbar">
         <h1>Administrador</h1>
         <span id="admin-supabase-status" class="status-badge status-connecting">Base de Datos: conectando...</span>
-        <button id="topbar-menu-toggle" type="button" class="topbar-menu-toggle" aria-expanded="false" aria-controls="topbar-controls">☰ Menú</button>
+        <button id="topbar-menu-toggle" type="button" class="topbar-menu-toggle btn-with-icon" aria-expanded="false" aria-controls="topbar-controls"><span class="action-icon action-icon-menu" aria-hidden="true"></span>Menú</button>
         <div id="topbar-controls" class="inline-controls collapsed">
-          <button id="toggle-qr" type="button">Mostrar QR</button>
-          <a class="link-btn" href="./index.html" target="_blank" rel="noopener">Abrir Pantalla de Juego</a>
-          <a class="link-btn" href="./questions.html" target="_blank" rel="noopener">Ir a Preguntas</a>
-          <a class="link-btn" href="./instructions.html" target="_blank" rel="noopener">Ver Instrucciones</a>
-          <button id="logout-admin" type="button" class="danger">Cerrar sesión</button>
+          <button id="toggle-qr" type="button" class="btn-with-icon icon-white-btn"><span class="action-icon action-icon-qr" aria-hidden="true"></span>Mostrar QR</button>
+          <a class="link-btn btn-with-icon icon-white-btn" href="./index.html" target="_blank" rel="noopener"><span class="action-icon action-icon-game" aria-hidden="true"></span>Pantalla de Juego</a>
+          <a class="link-btn btn-with-icon icon-white-btn" href="./questions.html" target="_blank" rel="noopener"><span class="action-icon action-icon-questions" aria-hidden="true"></span>Preguntas</a>
+          <a class="link-btn btn-with-icon icon-white-btn" href="./instructions.html" target="_blank" rel="noopener"><span class="action-icon action-icon-instructions" aria-hidden="true"></span>Instrucciones</a>
+          <button id="logout-admin" type="button" class="danger btn-with-icon icon-white-btn"><span class="action-icon action-icon-logout" aria-hidden="true"></span>Cerrar sesión</button>
         </div>
       </header>
 
@@ -45,9 +45,9 @@
           <button id="take-control-a" type="button" class="take-control-btn">Dar el control</button>
           <p id="admin-score-a" class="score">0</p>
           <div class="score-adjust-controls">
-            <button data-score-action="A:sub">Restar</button>
+            <button data-score-action="A:sub" type="button" class="icon-only-btn" title="Restar" aria-label="Restar"><span class="action-icon action-icon-sub" aria-hidden="true"></span></button>
             <input id="score-delta-a" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="Puntos para Equipo A" />
-            <button data-score-action="A:add">Sumar</button>
+            <button data-score-action="A:add" type="button" class="icon-only-btn" title="Sumar" aria-label="Sumar"><span class="action-icon action-icon-add" aria-hidden="true"></span></button>
           </div>
           <div class="strikes-block">
             <p>Strikes: <strong id="admin-strikes-a">0</strong></p>
@@ -59,7 +59,7 @@
             <ul id="team-members-a" class="team-members-list"></ul>
             <div class="manual-player-controls">
               <input id="manual-player-name-a" type="text" maxlength="32" placeholder="Agregar jugador manual" />
-              <button id="add-manual-player-a" type="button">Agregar</button>
+              <button id="add-manual-player-a" type="button" class="btn-with-icon icon-white-btn"><span class="action-icon action-icon-add" aria-hidden="true"></span>Agregar</button>
             </div>
           </div>
         </article>
@@ -70,9 +70,9 @@
           <button id="take-control-b" type="button" class="take-control-btn">Dar el control</button>
           <p id="admin-score-b" class="score">0</p>
           <div class="score-adjust-controls">
-            <button data-score-action="B:sub">Restar</button>
+            <button data-score-action="B:sub" type="button" class="icon-only-btn" title="Restar" aria-label="Restar"><span class="action-icon action-icon-sub" aria-hidden="true"></span></button>
             <input id="score-delta-b" type="number" min="0" step="1" value="0" inputmode="numeric" aria-label="Puntos para Equipo B" />
-            <button data-score-action="B:add">Sumar</button>
+            <button data-score-action="B:add" type="button" class="icon-only-btn" title="Sumar" aria-label="Sumar"><span class="action-icon action-icon-add" aria-hidden="true"></span></button>
           </div>
           <div class="strikes-block">
             <p>Strikes: <strong id="admin-strikes-b">0</strong></p>
@@ -84,7 +84,7 @@
             <ul id="team-members-b" class="team-members-list"></ul>
             <div class="manual-player-controls">
               <input id="manual-player-name-b" type="text" maxlength="32" placeholder="Agregar jugador manual" />
-              <button id="add-manual-player-b" type="button">Agregar</button>
+              <button id="add-manual-player-b" type="button" class="btn-with-icon icon-white-btn"><span class="action-icon action-icon-add" aria-hidden="true"></span>Agregar</button>
             </div>
           </div>
         </article>
@@ -157,7 +157,7 @@
         <p id="player-edit-error" class="mini-modal-error hidden">Ingresa un nombre válido</p>
         <div class="mini-modal-actions">
           <button id="player-edit-cancel" type="button" class="danger">Cancelar</button>
-          <button id="player-edit-save" type="button">Guardar</button>
+          <button id="player-edit-save" type="button" class="btn-with-icon"><span class="action-icon action-icon-save" aria-hidden="true"></span>Guardar</button>
         </div>
       </div>
     </div>

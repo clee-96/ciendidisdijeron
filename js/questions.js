@@ -423,14 +423,18 @@ function renderTypeList(state) {
 
     const editButton = document.createElement("button");
     editButton.type = "button";
-    editButton.className = "question-action-btn";
-    editButton.textContent = "Editar";
+    editButton.className = "question-action-btn icon-only-btn";
+    editButton.title = "Editar";
+    editButton.setAttribute("aria-label", "Editar");
+    editButton.innerHTML = '<span class="action-icon action-icon-edit" aria-hidden="true"></span>';
     editButton.addEventListener("click", () => openTypeModal({ mode: "edit", type }));
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
-    deleteButton.className = "question-action-btn danger";
-    deleteButton.textContent = "Eliminar";
+    deleteButton.className = "question-action-btn icon-only-btn";
+    deleteButton.title = "Eliminar";
+    deleteButton.setAttribute("aria-label", "Eliminar");
+    deleteButton.innerHTML = '<span class="action-icon action-icon-delete" aria-hidden="true"></span>';
     deleteButton.addEventListener("click", () => {
       openConfirmModal("¿Eliminar este tipo de preguntas?", async () => {
         try {
@@ -536,10 +540,25 @@ function renderQuestionList(state) {
     actionsCell.dataset.label = "Acciones";
     actionsCell.className = "question-actions";
 
+    const toggleAnswersButton = document.createElement("button");
+    toggleAnswersButton.type = "button";
+    toggleAnswersButton.className = "question-action-btn icon-only-btn";
+    toggleAnswersButton.classList.toggle("active", expandedQuestionIndex === index);
+    toggleAnswersButton.title = expandedQuestionIndex === index ? "Ocultar respuestas" : "Ver respuestas";
+    toggleAnswersButton.setAttribute("aria-label", expandedQuestionIndex === index ? "Ocultar respuestas" : "Ver respuestas");
+    toggleAnswersButton.setAttribute("aria-pressed", expandedQuestionIndex === index ? "true" : "false");
+    toggleAnswersButton.innerHTML = '<span class="action-icon action-icon-detail" aria-hidden="true"></span>';
+    toggleAnswersButton.addEventListener("click", () => {
+      expandedQuestionIndex = expandedQuestionIndex === index ? null : index;
+      renderQuestionList(state);
+    });
+
     const editButton = document.createElement("button");
     editButton.type = "button";
-    editButton.className = "question-action-btn";
-    editButton.textContent = "Editar";
+    editButton.className = "question-action-btn icon-only-btn";
+    editButton.title = "Editar";
+    editButton.setAttribute("aria-label", "Editar");
+    editButton.innerHTML = '<span class="action-icon action-icon-edit" aria-hidden="true"></span>';
     editButton.addEventListener("click", () => {
       openQuestionModal({
         mode: "edit",
@@ -551,8 +570,10 @@ function renderQuestionList(state) {
 
     const deleteButton = document.createElement("button");
     deleteButton.type = "button";
-    deleteButton.className = "question-action-btn danger";
-    deleteButton.textContent = "Eliminar";
+    deleteButton.className = "question-action-btn icon-only-btn";
+    deleteButton.title = "Eliminar";
+    deleteButton.setAttribute("aria-label", "Eliminar");
+    deleteButton.innerHTML = '<span class="action-icon action-icon-delete" aria-hidden="true"></span>';
     deleteButton.addEventListener("click", () => {
       openConfirmModal("¿Estás seguro de eliminar esta pregunta?", async () => {
         try {
@@ -566,17 +587,8 @@ function renderQuestionList(state) {
       });
     });
 
-    const toggleAnswersButton = document.createElement("button");
-    toggleAnswersButton.type = "button";
-    toggleAnswersButton.className = "question-action-btn";
-    toggleAnswersButton.textContent = expandedQuestionIndex === index ? "Ocultar respuestas" : "Respuestas";
-    toggleAnswersButton.addEventListener("click", () => {
-      expandedQuestionIndex = expandedQuestionIndex === index ? null : index;
-      renderQuestionList(state);
-    });
-
-    actionsCell.appendChild(editButton);
     actionsCell.appendChild(toggleAnswersButton);
+    actionsCell.appendChild(editButton);
     actionsCell.appendChild(deleteButton);
 
     row.appendChild(orderCell);
