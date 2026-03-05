@@ -426,7 +426,6 @@ function applyActionLocal(action, payload = {}) {
         state.round.buzzerWinner = payload.team;
         state.round.status = "locked";
         state.round.actionsLocked = false;
-        emitSoundEvent("button");
       }
       break;
     }
